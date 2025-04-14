@@ -1,0 +1,30 @@
+# PyCharm specific
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+.idea_modules/
+
+# Python specific
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+.venv/
+.conda/
+
+# Other
+*.log
+*.tmp
+*.swp
+*.swo
