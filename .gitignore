@@ -28,3 +28,66 @@ env/
 *.tmp
 *.swp
 *.swo
+
+# Node.js相关
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vue CLI相关
+public/*.html
+
+# 如果使用Vue CLI的默认设置，以下文件可能是不必要的
+# 但是根据你的项目配置，可能需要保留或调整
+dist/
+
+# 环境变量文件
+.env
+.env.local
+
+# 编辑器/IDE配置文件
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 操作系统生成的文件
+.DS_Store
+
+# 如果你的构建过程不会生成这些文件，或者你使用了不同的配置
+# 你可能需要调整或删除以下行
+index.html
+
+# 特定于Vue 3项目的忽略项
+# 如果使用了Vue Router的历史模式，可能需要包含以下忽略项
+# 确保你的服务器配置能够正确处理这些请求
+200.html
+
+# 如果你使用了TypeScript
+# 根据你的项目配置，可能需要调整
+*.tsbuildinfo
+
+# 如果你使用了ESLint
+# 根据你的项目配置，可能需要调整
+.eslintcache
+
+# 如果你使用了Prettier
+# 根据你的项目配置，可能需要调整
+.prettiercache
+
+# 如果你使用了Jest进行测试
+# 根据你的项目配置，可能需要调整
+/coverage/
+
+# 如果你使用了Cypress进行测试
+# 根据你的项目配置，可能需要调整
+/cypress/screenshots/
+/cypress/videos/
+
+# 如果你使用了Storybook
+# 根据你的项目配置，可能需要调整
+/.storybook/
