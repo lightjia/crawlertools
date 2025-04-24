@@ -12,7 +12,12 @@ class V2ex():
         self.topics = {}
         self.curPage = 1
         self.time_parser = time_parser()
-        self.db = TopicsDatabase()
+        self.db = None
+
+    def get_db(self):
+        if self.db is None:
+            self.db = TopicsDatabase()
+        return self.db
 
     def parseImg(self, dom, result):
         headImg = dom.find('img')
@@ -21,14 +26,14 @@ class V2ex():
 
     def LoadFromDb(self):
         # 1126213
-        data = self.db.query_reply(1125983)
+        data = self.get_db().query_reply(1125983)
         newData = self.getTopicDetails(1125983)
         print(f'oldNum: {data['reply_num']} newNum: {len(newData)}')
 
     def GetTopics(self):
         topics = {}
         response = requests.get('https://global.v2ex.co/recent', params={
-            'pa': self.curPage,
+            'p': self.curPage,
         })
 
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -36,9 +41,11 @@ class V2ex():
         if len(topics_div) > 0:
             for t in topics_div:
                 topic = {
-                    'time': int(self.time_parser.parse(timestr=t.find('span', title=True).get('title')).timestamp())}
+                    'time': int(self.time_parser.parse(timestr=t.find('span', title=True).get('title')).timestamp())
+                }
                 topic['content'] = t.find('a', class_='topic-link').get_text()
                 topic_id = int(re.search(r'/t/(\d+)#', t.find('a', class_='topic-link').get('href')).group(1))
+                topic['is_star'] = self.get_db().get_reply_num(topic_id)
                 self.parseImg(t, topic)
                 replys = t.find('a', class_='count_livid')
                 topic['reply_num'] = replys.get_text() if replys else 0

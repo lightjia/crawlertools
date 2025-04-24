@@ -1,53 +1,52 @@
 <script setup>
-import {defineProps} from 'vue'
+import {defineProps, ref} from 'vue'
+import {StarFilled} from "@element-plus/icons-vue";
+import {NAvatar, NBadge, NIcon} from "naive-ui";
 
-defineProps(['topic'])
+const props = defineProps(['topic'])
+const loadImage = ref(true)
+const isStar = ref(props.topic.is_star >= 0)
 const getTime = (timestamp) => {
   const date = new Date(timestamp);
-  const options = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  };
-  return new Intl.DateTimeFormat('en-GB', options).format(date);
+  const year = date.getFullYear();
+  const month = ('0' + (date.getMonth() + 1)).slice(-2); // 月份从 0 开始，需要加 1
+  const day = ('0' + date.getDate()).slice(-2);
+  const hour = ('0' + date.getHours()).slice(-2);
+  const minute = ('0' + date.getMinutes()).slice(-2);
+  const second = ('0' + date.getSeconds()).slice(-2);
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
 
+const handleStar = () => {
+  console.log(`is_star ${isStar.value}`)
+  isStar.value = !isStar.value
 }
 </script>
 
 <template>
-  <div class="grid grid-rows-12 grid-cols-12 gap-0 h-52">
-    <div class="row-span-full col-span-1 flex items-center justify-center">
-      <span class="font-bold  text-2xl">
+  <div class="min-h-28 max-h-96 mt-2 mb-2 w-full border-dashed border-2 flex justify-start">
+    <div class="self-center w-20 flex items-center justify-center">
+      <img class="w-full h-full" v-if="loadImage" :src="topic.userImg" @error="()=>loadImage = false"/>
+      <n-avatar v-else round :size="78">
         {{ topic.userName }}
-      </span>
+      </n-avatar>
     </div>
-    <div class="row-end-12 col-span-11 row-span-11 flex items-center justify-between  bg-gray-300 "><p
-        class="ml-1 text-3xl">
-      {{ topic.content }}</p>
-      <div class="flex justify-between mr-2">
-        <button class="badge bg-red-500 text-white px-2 py-1 font-bold shadow">
-          {{ topic.reply_num }}
-        </button>
+    <div class="flex-grow flex flex-col-reverse">
+      <div class="pt-1 pb-1 h-4 flex flex-row-reverse justify-start items-center bg-gray-300">
+        <p class="text-sm ">{{ getTime(topic.time * 1000) }}</p>
+        <p class="text-sm font-bold mr-5">{{ topic.topic_id }}</p>
+        <n-icon size="20" :color="isStar?'red':'gray'" class="mr-5" @click="handleStar">
+          <StarFilled/>
+        </n-icon>
+      </div>
+      <div class="flex-grow bg-blue-100 flex flex-row-reverse w-full items-center">
+        <n-badge :value="topic.reply_num" :max="1500" show-zero/>
+        <p class="ml-1 text-left text-xl flex-grow">
+          {{ topic.content }}
+        </p>
       </div>
     </div>
-    <div class="row-start-12 row-span-1 col-span-11 mb-1"><p class="mr-1">{{ getTime(topic.time * 1000) }}</p>
-    </div>
   </div>
-  <!--  <div class="flex  justify-between items-end  bg-gray-300">-->
-  <!--    <div class="w-16 h-16 bg-blue-500 flex items-center justify-center text-xl text-white rounded-full mr-4">-->
-  <!--      <span class="text-wrap">{{ topic.userName }}</span>-->
-  <!--    </div>-->
-  <!--    <p class="text-3xl">{{ topic.content }}</p>-->
-  <!--    <div class="flex justify-between mr-2">-->
-  <!--      <p class="mr-1">{{ getTime(topic.time * 1000) }}</p>-->
-  <!--      <button class="badge bg-red-500 text-white px-2 py-1 font-bold shadow">-->
-  <!--        {{ topic.reply_num }}-->
-  <!--      </button>-->
-  <!--    </div>-->
-  <!--  </div>-->
 </template>
 
 <style scoped>

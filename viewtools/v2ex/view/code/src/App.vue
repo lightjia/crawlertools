@@ -1,14 +1,16 @@
 <template>
-  <div class="bg-red-200 h-16 sticky top-0 w-full overflow-hidden">
-  </div>
-  <div class="w-full" style="height: calc(100% - 64px);">
-    <TopicView></TopicView>
-  </div>
-
+  <TopicView></TopicView>
 </template>
 
-<script setup>
+<script>
 import TopicView from './components/TopicView.vue'
+
+export default {
+  name: 'App',
+  components: {
+    TopicView: TopicView
+  }
+}
 </script>
 
 <style>
@@ -17,5 +19,9 @@ import TopicView from './components/TopicView.vue'
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  color: #2c3e50;
+  margin-top: 13px;
+  background: aqua;
+  overflow: hidden;
 }
 </style>

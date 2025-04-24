@@ -1,8 +1,10 @@
 <template>
-  <!--    <div class="fixed bg-red-500 h-16 w-full mt-0"></div>-->
-  <div class="divide-y divide-dashed  h-full overflow-y-auto" @wheel.stop="handleWheel" @scroll.stop="handleScroll"
-       ref="scrollDiv">
-    <TopicItem v-for="(item, index) in topics" :key="index" :topic="item"></TopicItem>
+  <div class="overflow-hidden w-full h-full">
+    <!--    <div class="fixed bg-red-500 h-16 w-full mt-0"></div>-->
+    <div class="divide-y divide-dashed overflow-y-auto" @wheel.stop="handleWheel" @scroll.stop="handleScroll"
+         ref="scrollDiv">
+      <TopicItem v-for="(item, index) in topics" :key="index" :topic="item"></TopicItem>
+    </div>
   </div>
   <!--  <div class="flex items-center justify-center">-->
   <!--    <span class="block font-bold  text-2xl">这是一个非常长的文本，它应该会自动换行。</span>-->
