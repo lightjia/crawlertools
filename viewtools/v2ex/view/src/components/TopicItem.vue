@@ -1,25 +1,37 @@
 <script setup>
 import {defineProps, ref} from 'vue'
 import {StarFilled} from "@element-plus/icons-vue";
-import {NAvatar, NBadge, NIcon} from "naive-ui";
+import {NAvatar, NBadge, NButton, NDrawer, NDrawerContent, NIcon, NTime} from "naive-ui";
+import axios from "axios";
+import TopicReplys from "@/components/TopicReplys.vue";
 
 const props = defineProps(['topic'])
 const loadImage = ref(true)
 const isStar = ref(props.topic.is_star >= 0)
-const getTime = (timestamp) => {
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  const month = ('0' + (date.getMonth() + 1)).slice(-2); // 月份从 0 开始，需要加 1
-  const day = ('0' + date.getDate()).slice(-2);
-  const hour = ('0' + date.getHours()).slice(-2);
-  const minute = ('0' + date.getMinutes()).slice(-2);
-  const second = ('0' + date.getSeconds()).slice(-2);
-  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-}
-
+const isView = ref(false)
+const replys = ref([])
+const stickyPosition = ref('static')
 const handleStar = () => {
   console.log(`is_star ${isStar.value}`)
   isStar.value = !isStar.value
+}
+const handleView = async () => {
+  isView.value = !isView.value
+  if (isView.value) {
+    stickyPosition.value = 'sticky'
+    const response = await axios.post('http://localhost:8080/api/op_code', {
+      code: 'detail',
+      topic_id: props.topic.topic_id
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    replys.value = response.data
+  }
+}
+const handleOrigin = () => {
+  window.open(`https://global.v2ex.co/t/${props.topic.topic_id}`, '_blank');
 }
 </script>
 
@@ -33,13 +45,15 @@ const handleStar = () => {
     </div>
     <div class="flex-grow flex flex-col-reverse">
       <div class="pt-1 pb-1 h-4 flex flex-row-reverse justify-start items-center bg-gray-300">
-        <p class="text-sm ">{{ getTime(topic.time * 1000) }}</p>
+        <n-time :time="topic.time" format="yyyy-MM-dd hh:mm:ss" unix/>
         <p class="text-sm font-bold mr-5">{{ topic.topic_id }}</p>
         <n-icon size="20" :color="isStar?'red':'gray'" class="mr-5" @click="handleStar">
           <StarFilled/>
         </n-icon>
       </div>
-      <div class="flex-grow bg-blue-100 flex flex-row-reverse w-full items-center">
+      <div
+          :class="['flex-grow', {'bg-blue-100':!isView}, {'bg-lime-500':isView},'flex', 'flex-row-reverse', 'w-full', 'items-center']"
+          @click="handleView">
         <n-badge :value="topic.reply_num" :max="1500" show-zero/>
         <p class="ml-1 text-left text-xl flex-grow">
           {{ topic.content }}
@@ -47,6 +61,19 @@ const handleStar = () => {
       </div>
     </div>
   </div>
+  <n-drawer v-model:show="isView" style="width: 75vw;" on-after-leave="handleView">
+    <n-drawer-content closable>
+      <template #header>
+        <div class="flex flex-row-reverse justify-start mr-2">
+          <n-button type="primary" @click="handleOrigin">
+            查看原文
+          </n-button>
+          <p class="flex-grow text-pink-900 font-bold text-xl"> {{ topic.content }}</p>
+        </div>
+      </template>
+      <TopicReplys v-for="(item, index) in replys" :key="index" :reply="item"></TopicReplys>
+    </n-drawer-content>
+  </n-drawer>
 </template>
 
 <style scoped>

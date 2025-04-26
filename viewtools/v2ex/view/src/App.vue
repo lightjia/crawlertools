@@ -1,10 +1,7 @@
 <template>
   <div class="bg-red-200 h-16 sticky top-0 w-full overflow-hidden">
   </div>
-  <div class="w-full" style="height: calc(100% - 64px);">
-    <TopicView></TopicView>
-  </div>
-
+  <TopicView></TopicView>
 </template>
 
 <script setup>

@@ -26,17 +26,17 @@ def before_request():
 
 @app.route('/api/op_code', methods=['POST'])
 def op_code():
-    app.logger.debug(f'op_code data')
     opData = request.get_json()
     if opData['code'] == 'more':
         return json.dumps(v2ex.More())
+    elif opData['code'] == 'detail':
+        return json.dumps(v2ex.getTopicDetails(opData['topic_id']))
     return "ok"
 
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    app.logger.debug(f'path: {path}')
     if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
         return send_from_directory(app.static_folder, path)
     else:

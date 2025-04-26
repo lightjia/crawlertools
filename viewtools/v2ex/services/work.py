@@ -50,7 +50,7 @@ class V2ex():
                 replys = t.find('a', class_='count_livid')
                 topic['reply_num'] = replys.get_text() if replys else 0
                 topics[topic_id] = topic
-                print(f'topic: {topic}')
+                # print(f'topic: {topic}')
                 # TopicsDatabase().insert_reply(topic['id'], topic['reply_num'], topic['content'], topic['time'],
                 #                               topic['replys'])
         return topics
@@ -89,10 +89,10 @@ class V2ex():
             page_input = soup.find('input', class_='page_input')
             if page_input is None or int(page_input.get('max')) < p:
                 break
+        print(f'reply_len: {len(replys)}')
         return replys
 
-
-V2ex().LoadFromDb()
+# V2ex().LoadFromDb()
 # V2ex().GetTopics()
 # pageNum = 1
 # def getRecentTopic():
